@@ -2,12 +2,19 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Copy, FileText, Scale, Search } from "lucide-react";
+import { Check, Copy, FileText, Scale, Search, Sparkles } from "lucide-react";
 import { DOC_TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
+
+/**
+ * Ключ sessionStorage для передачи контекста шаблона в чат
+ * (ChatWidget читает его при монтировании и подставляет запрос).
+ */
+export const TEMPLATE_PREFILL_KEY = "parselex-template-prefill";
 
 /**
  * Браузер базы шаблонов (страница /templates).
@@ -18,9 +25,11 @@ import { DOC_TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
  */
 
 export function TemplatesBrowser() {
+  const router = useRouter();
   const [category, setCategory] = useState<string>("all");
   const [query, setQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [fillingId, setFillingId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -53,6 +62,33 @@ export function TemplatesBrowser() {
       // Буфер обмена недоступен (например, вне HTTPS) — молча игнорируем:
       // текст шаблона и так виден и выделяется вручную.
     }
+  };
+
+  /**
+   * «Заполнить с Parselex»: копируем текст шаблона в буфер, кладём
+   * контекст в sessionStorage и переходим к чату на лендинге (/#chat).
+   * ChatWidget прочитает ключ TEMPLATE_PREFILL_KEY и подставит запрос.
+   * Работает и в статической сборке (там чат покажет уведомление,
+   * а текст шаблона останется в буфере обмена).
+   */
+  const fillWithParselex = async (id: string, title: string, body: string) => {
+    setFillingId(id);
+    try {
+      await navigator.clipboard.writeText(body);
+      setCopiedId(id);
+    } catch {
+      // без буфера обмена всё равно переходим в чат — шаблон передаётся в контексте
+    }
+    try {
+      sessionStorage.setItem(
+        TEMPLATE_PREFILL_KEY,
+        JSON.stringify({ title, body, ts: Date.now() })
+      );
+    } catch {
+      // sessionStorage недоступен — просто перейдём в чат без предзаполнения
+    }
+    setTimeout(() => setFillingId((cur) => (cur === id ? null : cur)), 2000);
+    router.push("/#chat");
   };
 
   return (
@@ -141,6 +177,23 @@ export function TemplatesBrowser() {
                         </div>
                       </div>
                       <div className="mt-3 flex flex-wrap items-center gap-3">
+                        <Button
+                          size="sm"
+                          className="h-8 rounded-lg bg-amber-500 text-xs font-semibold text-white hover:bg-amber-600"
+                          onClick={() => fillWithParselex(t.id, t.title, t.body)}
+                        >
+                          {fillingId === t.id ? (
+                            <>
+                              <Check className="mr-1.5 h-3.5 w-3.5" />
+                              Готово — открываю чат
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                              Заполнить с Parselex
+                            </>
+                          )}
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"

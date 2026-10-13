@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BookOpenCheck, CornerDownLeft, Loader2, Scale, ShieldAlert } from "lucide-react";
+import { BookOpenCheck, CornerDownLeft, Loader2, Scale, ShieldAlert, Sparkles } from "lucide-react";
+import { TEMPLATE_PREFILL_KEY } from "@/components/templates-browser";
 
 type Citation = { source: string; note: string };
 type Msg = { role: "user" | "assistant"; content: string; citations?: Citation[] };
@@ -63,11 +64,44 @@ export function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [quota, setQuota] = useState<string | null>(null);
+  const [prefilled, setPrefilled] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, loading]);
+
+  /**
+   * Приём контекста шаблона из базы шаблонов (/templates → «Заполнить
+   * с Parselex»): TemplatesBrowser кладёт объект в sessionStorage под
+   * ключом TEMPLATE_PREFILL_KEY, здесь мы читаем его один раз при
+   * монтировании и подставляем запрос в поле ввода. В статической
+   * сборке чат недоступен — показываем честное уведомление (текст
+   * шаблона к этому моменту уже в буфере обмена).
+   */
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(TEMPLATE_PREFILL_KEY);
+      if (!raw) return;
+      sessionStorage.removeItem(TEMPLATE_PREFILL_KEY);
+      const data = JSON.parse(raw) as { title?: string; body?: string };
+      if (!data?.title) return;
+      setPrefilled(true);
+      if (IS_STATIC) {
+        setError(
+          `Шаблон «${data.title}» скопирован в буфер обмена. В статической демо-версии чат отключён — заполните поля [в скобках] вручную или откройте шаблон в полной версии сервиса.`
+        );
+        return;
+      }
+      const excerpt = (data.body ?? "").slice(0, 2400);
+      const suffix = (data.body ?? "").length > 2400 ? "\n… (текст обрезан, полная версия — в базе шаблонов)" : "";
+      setInput(
+        `Помогите заполнить шаблон «${data.title}» под мою ситуацию.\n\nТекст шаблона:\n${excerpt}${suffix}\n\nМоя ситуация: `
+      );
+    } catch {
+      // повреждённый/недоступный sessionStorage — просто открываем чат без предзаполнения
+    }
+  }, []);
 
   async function send(text: string) {
     const message = text.trim();
@@ -119,9 +153,15 @@ export function ChatWidget() {
             Российское право · ответы со ссылками на нормы
           </p>
         </div>
-        <Badge variant="outline" className="ml-auto shrink-0 border-amber-300 bg-amber-50 text-amber-700">
-          beta
-        </Badge>
+        {prefilled && !IS_STATIC ? (
+          <Badge variant="outline" className="ml-auto shrink-0 border-amber-300 bg-amber-50 text-amber-700">
+            <Sparkles className="mr-1 h-3 w-3" /> шаблон подключён
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="ml-auto shrink-0 border-amber-300 bg-amber-50 text-amber-700">
+            beta
+          </Badge>
+        )}
       </div>
 
       {/* messages */}
