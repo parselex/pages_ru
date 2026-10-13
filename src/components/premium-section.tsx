@@ -27,10 +27,10 @@ import {
  *   4. Мощные нейросети — 10 000 кредитов на Claude Opus 5, ChatGPT-5.6,
  *      Gemini 3.1 Pro для сложных дел
  *
- * 2026-10-13 (владелец): цена ×2 (2 980 ₽/мес) и в Premium дополнительно
+ * 2026-10-13 (владелец): цена ×2 с округлением (3 000 ₽/мес) и в Premium дополнительно
  * входят продукты безопасности — LexZtna Secure Network и PII Firewall.
  *
- * Цена: 2 980 ₽/мес, рекуррентные платежи.
+ * Цена: 3 000 ₽/мес, рекуррентные платежи.
  */
 const PREMIUM_FEATURES = [
   {
@@ -120,7 +120,7 @@ export function PremiumSection() {
             </div>
 
             <p className="mt-5">
-              <span className="text-4xl font-bold tracking-tight">2 980 ₽</span>
+              <span className="text-4xl font-bold tracking-tight">3 000 ₽</span>
               <span className="ml-1.5 text-sm text-zinc-500">в месяц</span>
             </p>
             <p className="mt-1 text-xs text-zinc-500">
@@ -145,7 +145,7 @@ export function PremiumSection() {
               onClick={() => setModalOpen(true)}
               className="mt-7 h-12 w-full rounded-xl bg-amber-500 text-base font-semibold text-white hover:bg-amber-600"
             >
-              Подписаться за 2 980 ₽ <ArrowRight className="ml-2 h-4 w-4" />
+              Подписаться за 3 000 ₽ <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 
             <p className="mt-3 text-center text-[11px] leading-relaxed text-zinc-400">

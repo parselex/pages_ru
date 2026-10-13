@@ -118,7 +118,7 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
             <DialogHeader>
               <DialogTitle>Оформление подписки Premium</DialogTitle>
               <DialogDescription>
-                2 980 ₽ в месяц · автопродление · отмена в любой момент
+                3 000 ₽ в месяц · автопродление · отмена в любой момент
               </DialogDescription>
             </DialogHeader>
 
@@ -211,7 +211,7 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  "Оформить подписку — 2 980 ₽/мес"
+                  "Оформить подписку — 3 000 ₽/мес"
                 )}
               </Button>
               <p className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-400">

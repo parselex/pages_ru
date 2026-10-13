@@ -55,7 +55,7 @@ jobs:
             echo "::error::unprefixed /offer links found (basePath broken)"
             exit 1
           fi
-          grep -q '2 980' out/index.html || { echo "::error::price 2 980 not found in landing"; exit 1; }
+          grep -q '3 000' out/index.html || { echo "::error::price 3 000 not found in landing"; exit 1; }
           echo "==> export sanity checks passed"
 
       - name: Configure Pages

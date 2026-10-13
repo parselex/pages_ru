@@ -42,7 +42,7 @@ const FAQ = [
   },
   {
     q: "Что входит в подписку Premium и сколько она стоит?",
-    a: "Premium стоит 2 980 ₽ в месяц и включает: правовую базу РФ — ответы со ссылками на законы и практику; работу с документами — разбор и создание PDF, Word, DOC; безлимитное общение — без дневных лимитов на вопросы; 10 000 кредитов в месяц на старшие нейросети (Claude Opus 5, ChatGPT-5.6, Gemini 3.1 Pro) для сложных дел; а также продукты безопасности — LexZtna Secure Network (защищённый Zero-Trust-доступ к сервисам) и PII Firewall (автоматическое редактирование персональных данных до передачи в модель).",
+    a: "Premium стоит 3 000 ₽ в месяц и включает: правовую базу РФ — ответы со ссылками на законы и практику; работу с документами — разбор и создание PDF, Word, DOC; безлимитное общение — без дневных лимитов на вопросы; 10 000 кредитов в месяц на старшие нейросети (Claude Opus 5, ChatGPT-5.6, Gemini 3.1 Pro) для сложных дел; а также продукты безопасности — LexZtna Secure Network (защищённый Zero-Trust-доступ к сервисам) и PII Firewall (автоматическое редактирование персональных данных до передачи в модель).",
   },
   {
     q: "Что такое кредиты нейросетей и как они работают?",
@@ -235,7 +235,7 @@ export default function Home() {
                 href="#premium"
                 className="font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800"
               >
-                Premium — 2 980 ₽/мес
+                Premium — 3 000 ₽/мес
               </Link>
             </p>
           </div>
@@ -342,7 +342,7 @@ export default function Home() {
                 ["Политика обработки персональных данных", "/privacy"],
                 ["Условия подписки Premium", "/terms"],
                 ["Отказ от ответственности (ИИ)", "/terms"],
-                ["Premium — 2 980 ₽/мес", "#premium"],
+                ["Premium — 3 000 ₽/мес", "#premium"],
                 ["contact@parselex.app", "mailto:contact@parselex.app"],
               ].map(([label, href]) => (
                 <Link key={label} href={href} className="transition hover:text-amber-400">
