@@ -209,8 +209,8 @@ export default function OfferPage() {
         <li>ИНН/КПП: [указать]</li>
         <li>ОГРН: [указать]</li>
         <li>Адрес: [юридический адрес]</li>
-        <li>E-mail для вопросов по платежам: [billing@parselex.app]</li>
-        <li>E-mail поддержки: [support@parselex.app]</li>
+        <li>E-mail для вопросов по платежам: [contact@parselex.ru]</li>
+        <li>E-mail поддержки: [contact@parselex.ru]</li>
       </ul>
       <p>
         Местонахождение площадки Сервиса, применимое право — право Российской
