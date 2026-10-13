@@ -1,0 +1,81 @@
+name: Deploy RU site to GitHub Pages
+
+# Статический экспорт Next.js и публикация на GitHub Pages.
+# Проектный URL: https://parselex.github.io/pages_ru/ (basePath "/pages_ru").
+# Без кастомного домена и без редиректов — по решению владельца (2026-10-13).
+#
+# Сайт внутренний: noindex + INTERNAL-бейдж. Домен parselex.ru сюда пока
+# НЕ подключается; все редиректы — позже, отдельным решением.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # output: "export" не поддерживает серверные API-роуты —
+      # build:static удаляет src/app/api и собирает в out/ с basePath /pages_ru.
+      # Клиентские компоненты узнают статический режим через
+      # NEXT_PUBLIC_STATIC_EXPORT=1 (чат и подписка деградируют gracefully).
+      - name: Static export build
+        run: npm run build:static
+
+      - name: Sanity check export
+        run: |
+          set -euo pipefail
+          test -f out/index.html || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/offer/index.html || { echo "::error::out/offer/index.html missing"; exit 1; }
+          test -f out/terms/index.html || { echo "::error::out/terms/index.html missing"; exit 1; }
+          test -f out/privacy/index.html || { echo "::error::out/privacy/index.html missing"; exit 1; }
+          if grep -rl 'href="/offer"' out --include='*.html' | grep -q .; then
+            echo "::error::unprefixed /offer links found (basePath broken)"
+            exit 1
+          fi
+          grep -q '2 980' out/index.html || { echo "::error::price 2 980 not found in landing"; exit 1; }
+          echo "==> export sanity checks passed"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

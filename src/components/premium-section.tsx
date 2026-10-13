@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SubscribeModal } from "@/components/subscribe-modal";
@@ -8,20 +9,28 @@ import {
   ArrowRight,
   BookOpenCheck,
   Check,
+  FileLock2,
   FileText,
   Infinity as InfinityIcon,
+  Network,
   Sparkles,
 } from "lucide-react";
 
 /**
- * Четыре преимущества Premium — формулировки заданы владельцем продукта
+ * Преимущества Premium.
+ *
+ * Четыре базовых преимущества — формулировки заданы владельцем продукта
  * дословно (2026-10-12), не перефразировать без согласования:
  *   1. Правовая база РФ — ответы со ссылками на законы и практику
  *   2. Работа с документами — разбор и создание PDF, Word, DOC
  *   3. Безлимитное общение — задавайте любое количество вопросов
  *   4. Мощные нейросети — 10 000 кредитов на Claude Opus 5, ChatGPT-5.6,
  *      Gemini 3.1 Pro для сложных дел
- * Цена: 1 490 ₽/мес, рекуррентные платежи.
+ *
+ * 2026-10-13 (владелец): цена ×2 (2 980 ₽/мес) и в Premium дополнительно
+ * входят продукты безопасности — LexZtna Secure Network и PII Firewall.
+ *
+ * Цена: 2 980 ₽/мес, рекуррентные платежи.
  */
 const PREMIUM_FEATURES = [
   {
@@ -43,6 +52,16 @@ const PREMIUM_FEATURES = [
     icon: Sparkles,
     title: "Мощные нейросети",
     text: "10 000 кредитов на Claude Opus 5, ChatGPT-5.6, Gemini 3.1 Pro для сложных дел",
+  },
+  {
+    icon: Network,
+    title: "LexZtna Secure Network",
+    text: "Защищённый Zero-Trust-доступ к сервисам Parselex — через аутентифицированные туннели, без доверия к сети",
+  },
+  {
+    icon: FileLock2,
+    title: "PII Firewall",
+    text: "Персональные данные автоматически редактируются на границе сети — до того, как текст попадёт в модель",
   },
 ];
 
@@ -67,12 +86,13 @@ export function PremiumSection() {
               Premium
             </Badge>
             <h2 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
-              Всё наши преимущества — в одной подписке
+              Все преимущества — в одной подписке
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
               Бесплатный чат отвечает на первые вопросы. Premium открывает полную
-              правовую базу РФ, работу с документами и старшие нейросети — для
-              сложных дел и профессиональных задач.
+              правовую базу РФ, работу с документами, старшие нейросети и
+              продукты безопасности LexZtna — для сложных дел и профессиональных
+              задач.
             </p>
 
             <ul className="mt-8 space-y-5">
@@ -100,7 +120,7 @@ export function PremiumSection() {
             </div>
 
             <p className="mt-5">
-              <span className="text-4xl font-bold tracking-tight">1 490 ₽</span>
+              <span className="text-4xl font-bold tracking-tight">2 980 ₽</span>
               <span className="ml-1.5 text-sm text-zinc-500">в месяц</span>
             </p>
             <p className="mt-1 text-xs text-zinc-500">
@@ -125,22 +145,22 @@ export function PremiumSection() {
               onClick={() => setModalOpen(true)}
               className="mt-7 h-12 w-full rounded-xl bg-amber-500 text-base font-semibold text-white hover:bg-amber-600"
             >
-              Подписаться за 1 490 ₽ <ArrowRight className="ml-2 h-4 w-4" />
+              Подписаться за 2 980 ₽ <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 
             <p className="mt-3 text-center text-[11px] leading-relaxed text-zinc-400">
               Оформляя подписку, вы соглашаетесь с условиями{" "}
-              <a href="/offer" className="underline underline-offset-2 hover:text-amber-700">
+              <Link href="/offer" className="underline underline-offset-2 hover:text-amber-700">
                 оферты рекуррентных платежей
-              </a>
+              </Link>
               ,{" "}
-              <a href="/privacy" className="underline underline-offset-2 hover:text-amber-700">
+              <Link href="/privacy" className="underline underline-offset-2 hover:text-amber-700">
                 политики ПД
-              </a>{" "}
+              </Link>{" "}
               и{" "}
-              <a href="/terms" className="underline underline-offset-2 hover:text-amber-700">
+              <Link href="/terms" className="underline underline-offset-2 hover:text-amber-700">
                 условий подписки
-              </a>
+              </Link>
               . Отмена — в любой момент.
             </p>
           </div>

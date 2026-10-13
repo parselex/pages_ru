@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +28,12 @@ type Props = {
  * Платёжный провайдер НЕ подключён (Phase 4) — submit уходит в /api/subscribe,
  * который лишь валидирует согласия и имитирует приём заявки.
  * Оба согласия обязательны: чекбокс оферты+ПД и чекбокс условий подписки.
+ *
+ * В статической сборке для GitHub Pages (NEXT_PUBLIC_STATIC_EXPORT=1)
+ * серверного эндпоинта нет — заявка имитируется локально, без fetch.
  */
+const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
+
 export function SubscribeModal({ open, onOpenChange }: Props) {
   const [email, setEmail] = useState("");
   const [acceptOffer, setAcceptOffer] = useState(false);
@@ -62,6 +68,12 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
     }
     setLoading(true);
     try {
+      if (IS_STATIC) {
+        // Статическая сборка (GitHub Pages): эндпоинта нет, имитируем приём заявки.
+        await new Promise((r) => setTimeout(r, 600));
+        setDone(true);
+        return;
+      }
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -106,7 +118,7 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
             <DialogHeader>
               <DialogTitle>Оформление подписки Premium</DialogTitle>
               <DialogDescription>
-                1 490 ₽ в месяц · автопродление · отмена в любой момент
+                2 980 ₽ в месяц · автопродление · отмена в любой момент
               </DialogDescription>
             </DialogHeader>
 
@@ -137,23 +149,23 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
                     className="text-xs leading-relaxed text-zinc-600"
                   >
                     Я согласен с условиями{" "}
-                    <a
+                    <Link
                       href="/offer"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-amber-700 underline underline-offset-2"
                     >
                       оферты рекуррентных платежей
-                    </a>{" "}
+                    </Link>{" "}
                     и{" "}
-                    <a
+                    <Link
                       href="/privacy"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-amber-700 underline underline-offset-2"
                     >
                       политикой обработки персональных данных
-                    </a>
+                    </Link>
                   </label>
                 </div>
                 <div className="flex items-start gap-2.5">
@@ -168,14 +180,14 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
                     className="text-xs leading-relaxed text-zinc-600"
                   >
                     Я согласен с{" "}
-                    <a
+                    <Link
                       href="/terms"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-semibold text-amber-700 underline underline-offset-2"
                     >
                       условиями подписки
-                    </a>
+                    </Link>
                   </label>
                 </div>
               </div>
@@ -199,7 +211,7 @@ export function SubscribeModal({ open, onOpenChange }: Props) {
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  "Оформить подписку — 1 490 ₽/мес"
+                  "Оформить подписку — 2 980 ₽/мес"
                 )}
               </Button>
               <p className="flex items-center justify-center gap-1.5 text-[11px] text-zinc-400">

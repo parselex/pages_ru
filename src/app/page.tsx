@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
@@ -41,7 +42,7 @@ const FAQ = [
   },
   {
     q: "Что входит в подписку Premium и сколько она стоит?",
-    a: "Premium стоит 1 490 ₽ в месяц и включает: правовую базу РФ — ответы со ссылками на законы и практику; работу с документами — разбор и создание PDF, Word, DOC; безлимитное общение — без дневных лимитов на вопросы; и 10 000 кредитов в месяц на старшие нейросети (Claude Opus 5, ChatGPT-5.6, Gemini 3.1 Pro) для сложных дел.",
+    a: "Premium стоит 2 980 ₽ в месяц и включает: правовую базу РФ — ответы со ссылками на законы и практику; работу с документами — разбор и создание PDF, Word, DOC; безлимитное общение — без дневных лимитов на вопросы; 10 000 кредитов в месяц на старшие нейросети (Claude Opus 5, ChatGPT-5.6, Gemini 3.1 Pro) для сложных дел; а также продукты безопасности — LexZtna Secure Network (защищённый Zero-Trust-доступ к сервисам) и PII Firewall (автоматическое редактирование персональных данных до передачи в модель).",
   },
   {
     q: "Что такое кредиты нейросетей и как они работают?",
@@ -230,12 +231,12 @@ export default function Home() {
             <ChatWidget />
             <p className="mt-5 text-center text-sm text-zinc-500">
               Нужен безлимит, разбор документов и старшие модели?{" "}
-              <a
+              <Link
                 href="#premium"
                 className="font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800"
               >
-                Premium — 1 490 ₽/мес
-              </a>
+                Premium — 2 980 ₽/мес
+              </Link>
             </p>
           </div>
         </section>
@@ -341,12 +342,12 @@ export default function Home() {
                 ["Политика обработки персональных данных", "/privacy"],
                 ["Условия подписки Premium", "/terms"],
                 ["Отказ от ответственности (ИИ)", "/terms"],
-                ["Premium — 1 490 ₽/мес", "#premium"],
+                ["Premium — 2 980 ₽/мес", "#premium"],
                 ["contact@parselex.app", "mailto:contact@parselex.app"],
               ].map(([label, href]) => (
-                <a key={label} href={href} className="transition hover:text-amber-400">
+                <Link key={label} href={href} className="transition hover:text-amber-400">
                   {label}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>

@@ -27,6 +27,14 @@ const GREETING: Msg = {
     "Здравствуйте! Я — ИИ-помощник Parselex по российскому праву. Опишите ситуацию — я подскажу применимые нормы и порядок действий со ссылками на закон.\n\nПомните: я даю правовую информацию, а не юридическую консультацию.",
 };
 
+/**
+ * Статическая сборка для GitHub Pages (NEXT_PUBLIC_STATIC_EXPORT=1):
+ * серверного эндпоинта /api/chat нет — ввод отключён, показываем уведомление.
+ */
+const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
+const STATIC_NOTICE =
+  "Это статическая демо-версия страницы — живой чат доступен в полной версии сервиса.";
+
 function MarkdownView({ text }: { text: string }) {
   return (
     <div className="[&_a]:text-amber-700 [&_a]:underline [&_h3]:mt-3 [&_h3]:text-sm [&_h3]:font-bold [&_h4]:mt-2 [&_h4]:text-sm [&_h4]:font-semibold [&_li]:mt-1 [&_ol]:mt-2 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-5 [&_p]:mt-2 [&_p]:first:mt-0 [&_strong]:font-semibold [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5">
@@ -64,6 +72,10 @@ export function ChatWidget() {
   async function send(text: string) {
     const message = text.trim();
     if (!message || loading) return;
+    if (IS_STATIC) {
+      setError(STATIC_NOTICE);
+      return;
+    }
     setError(null);
     setInput("");
     const history = messages
@@ -174,7 +186,7 @@ export function ChatWidget() {
       </ScrollArea>
 
       {/* suggestions (visible while conversation is short) */}
-      {messages.length <= 1 && !loading && (
+      {messages.length <= 1 && !loading && !IS_STATIC && (
         <div className="flex flex-wrap gap-2 px-4 pb-2">
           {SUGGESTIONS.map((s) => (
             <button
@@ -190,6 +202,11 @@ export function ChatWidget() {
 
       {/* input */}
       <div className="border-t border-zinc-100 bg-white px-4 py-3">
+        {IS_STATIC && (
+          <p className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-800">
+            {STATIC_NOTICE}
+          </p>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -200,15 +217,15 @@ export function ChatWidget() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Опишите вашу ситуацию…"
+            placeholder={IS_STATIC ? "Чат недоступен в статической демо-версии" : "Опишите вашу ситуацию…"}
             maxLength={4000}
-            disabled={loading}
+            disabled={loading || IS_STATIC}
             className="h-11 flex-1 rounded-xl border-zinc-200 focus-visible:ring-amber-400"
             aria-label="Ваш правовой вопрос"
           />
           <Button
             type="submit"
-            disabled={loading || !input.trim()}
+            disabled={loading || !input.trim() || IS_STATIC}
             className="h-11 rounded-xl bg-amber-500 px-4 text-white hover:bg-amber-600"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CornerDownLeft className="h-4 w-4" />}
