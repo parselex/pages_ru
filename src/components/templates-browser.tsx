@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Copy, FileText, Scale, Search, Sparkles } from "lucide-react";
+import { Check, Copy, FileText, Gavel, Scale, Search, Sparkles } from "lucide-react";
 import { DOC_TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
 
 /**
@@ -194,6 +194,19 @@ export function TemplatesBrowser() {
                             </>
                           )}
                         </Button>
+                        {/* «Проверка готовности дела» (Case Readiness Score) в Parselex —
+                            вместо финальной вычитки профильным юристом (решение владельца,
+                            2026-10-14): открытая секция #score прода-лендинга parselex.app */}
+                        <a
+                          href="https://parselex.app/#score"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Case Readiness Score — оценка готовности дела 0–100 в Parselex"
+                          className="inline-flex h-8 items-center rounded-lg border border-zinc-200 px-3 text-xs font-semibold text-zinc-700 transition hover:border-amber-300 hover:text-amber-700"
+                        >
+                          <Gavel className="mr-1.5 h-3.5 w-3.5" />
+                          Проверка готовности дела
+                        </a>
                         <Button
                           variant="outline"
                           size="sm"
