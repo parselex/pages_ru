@@ -147,6 +147,12 @@ export default function Home() {
             ВНУТРЕННЯЯ ВЕРСИЯ — НЕ ПУБЛИКОВАТЬ
           </Badge>
           <nav className="ml-auto hidden items-center gap-5 sm:flex">
+            <Link
+              href="/templates"
+              className="text-sm font-semibold text-zinc-600 transition hover:text-amber-600"
+            >
+              Шаблоны
+            </Link>
             <a
               href="#premium"
               className="text-sm font-semibold text-zinc-600 transition hover:text-amber-600"
@@ -261,6 +267,16 @@ export default function Home() {
                 </Card>
               ))}
             </div>
+            <p className="mt-6 text-center text-sm text-zinc-500">
+              Готовые структуры претензий, жалоб, заявлений и договоров — в{" "}
+              <Link
+                href="/templates"
+                className="font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800"
+              >
+                базе шаблонов документов
+              </Link>
+              .
+            </p>
           </div>
         </section>
 
@@ -343,6 +359,7 @@ export default function Home() {
                 ["Условия подписки Premium", "/terms"],
                 ["Отказ от ответственности (ИИ)", "/terms"],
                 ["Premium — 3 000 ₽/мес", "#premium"],
+                ["База шаблонов документов", "/templates"],
                 ["contact@parselex.ru", "mailto:contact@parselex.ru"],
               ].map(([label, href]) => (
                 <Link key={label} href={href} className="transition hover:text-amber-400">

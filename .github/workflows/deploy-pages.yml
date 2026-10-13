@@ -51,6 +51,8 @@ jobs:
           test -f out/offer/index.html || { echo "::error::out/offer/index.html missing"; exit 1; }
           test -f out/terms/index.html || { echo "::error::out/terms/index.html missing"; exit 1; }
           test -f out/privacy/index.html || { echo "::error::out/privacy/index.html missing"; exit 1; }
+          test -f out/templates/index.html || { echo "::error::out/templates/index.html missing"; exit 1; }
+          grep -q 'Договор оказания услуг' out/templates/index.html || { echo "::error::template catalog not rendered"; exit 1; }
           if grep -rl 'href="/offer"' out --include='*.html' | grep -q .; then
             echo "::error::unprefixed /offer links found (basePath broken)"
             exit 1
